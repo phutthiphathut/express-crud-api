@@ -1,12 +1,9 @@
 import App from "./app";
-import dotenv from "dotenv";
+import { AppConfig } from "./configs/config";
 import { AppDataSource } from "./data-source";
 
 const startServer = async () => {
   try {
-    // Load environment variables from .env file
-    dotenv.config();
-
     // Initialize TypeORM database connection
     console.log("⏳ Initializing database connection...");
     await AppDataSource.initialize();
@@ -15,10 +12,7 @@ const startServer = async () => {
     // Start the server
     const app = new App();
 
-    const appName = process.env.APP_NAME || "express-crud-api";
-    const appPort = parseInt(process.env.PORT || "3000", 10);
-
-    app.listen(appName, appPort);
+    app.listen(AppConfig.NAME, AppConfig.PORT);
   } catch (error) {
     console.error("Failed to start server:", error);
 

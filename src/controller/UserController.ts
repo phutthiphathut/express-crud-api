@@ -3,6 +3,7 @@ import { validate } from "class-validator";
 import { plainToClass } from "class-transformer";
 import { User } from "../entity/User";
 import { userRepository } from "../repository/UserRepository";
+import { AppConfig } from "../configs/config";
 
 export class UserController {
   // GET /users - Find all users with pagination
@@ -13,14 +14,20 @@ export class UserController {
 
       if (page < 1) {
         response.status(400).json({
-          error: "Page number must be greater than 0",
+          status: "FAILED",
+          message: "Page number must be greater than 0",
+          version: AppConfig.VERSION,
+          timestamp: new Date().toISOString(),
         });
         return;
       }
 
       if (limit < 1 || limit > 100) {
         response.status(400).json({
-          error: "Limit must be between 1 and 100",
+          status: "FAILED",
+          message: "Limit must be between 1 and 100",
+          version: AppConfig.VERSION,
+          timestamp: new Date().toISOString(),
         });
         return;
       }
@@ -28,13 +35,27 @@ export class UserController {
       const result = await userRepository.findAll(page, limit);
 
       response.json({
+        status: "SUCCESS",
         message: "Users retrieved successfully",
-        ...result,
+        version: AppConfig.VERSION,
+        timestamp: new Date().toISOString(),
+        data: {
+          results: result.data,
+          pagination: {
+            total: result.total,
+            page: result.page,
+            pageSize: limit,
+            totalPages: result.totalPages,
+          },
+        },
       });
     } catch (error) {
       console.error("Error in findAll:", error);
       response.status(500).json({
-        error: "Internal server error",
+        status: "FAILED",
+        message: "Internal server error",
+        version: AppConfig.VERSION,
+        timestamp: new Date().toISOString(),
       });
     }
   }
@@ -46,7 +67,10 @@ export class UserController {
 
       if (isNaN(id)) {
         response.status(400).json({
-          error: "Invalid user ID",
+          status: "FAILED",
+          message: "Invalid user ID",
+          version: AppConfig.VERSION,
+          timestamp: new Date().toISOString(),
         });
         return;
       }
@@ -55,19 +79,28 @@ export class UserController {
 
       if (!user) {
         response.status(404).json({
-          error: "User not found",
+          status: "FAILED",
+          message: "User not found",
+          version: AppConfig.VERSION,
+          timestamp: new Date().toISOString(),
         });
         return;
       }
 
       response.json({
+        status: "SUCCESS",
         message: "User retrieved successfully",
+        version: AppConfig.VERSION,
+        timestamp: new Date().toISOString(),
         data: user,
       });
     } catch (error) {
       console.error("Error in findOne:", error);
       response.status(500).json({
-        error: "Internal server error",
+        status: "FAILED",
+        message: "Internal server error",
+        version: AppConfig.VERSION,
+        timestamp: new Date().toISOString(),
       });
     }
   }
@@ -87,8 +120,11 @@ export class UserController {
         }));
 
         response.status(400).json({
-          error: "Validation failed",
-          details: validationErrors,
+          status: "FAILED",
+          message: "Validation failed",
+          version: AppConfig.VERSION,
+          timestamp: new Date().toISOString(),
+          data: validationErrors,
         });
         return;
       }
@@ -96,13 +132,19 @@ export class UserController {
       const newUser = await userRepository.create(userData);
 
       response.status(201).json({
+        status: "SUCCESS",
         message: "User created successfully",
+        version: AppConfig.VERSION,
+        timestamp: new Date().toISOString(),
         data: newUser,
       });
     } catch (error) {
       console.error("Error in create:", error);
       response.status(500).json({
-        error: "Internal server error",
+        status: "FAILED",
+        message: "Internal server error",
+        version: AppConfig.VERSION,
+        timestamp: new Date().toISOString(),
       });
     }
   }
@@ -114,7 +156,10 @@ export class UserController {
 
       if (isNaN(id)) {
         response.status(400).json({
-          error: "Invalid user ID",
+          status: "FAILED",
+          message: "Invalid user ID",
+          version: AppConfig.VERSION,
+          timestamp: new Date().toISOString(),
         });
         return;
       }
@@ -122,7 +167,10 @@ export class UserController {
       const existingUser = await userRepository.findOne(id);
       if (!existingUser) {
         response.status(404).json({
-          error: "User not found",
+          status: "FAILED",
+          message: "User not found",
+          version: AppConfig.VERSION,
+          timestamp: new Date().toISOString(),
         });
         return;
       }
@@ -143,8 +191,11 @@ export class UserController {
         }));
 
         response.status(400).json({
-          error: "Validation failed",
-          details: validationErrors,
+          status: "FAILED",
+          message: "Validation failed",
+          version: AppConfig.VERSION,
+          timestamp: new Date().toISOString(),
+          data: validationErrors,
         });
         return;
       }
@@ -152,13 +203,19 @@ export class UserController {
       const updatedUser = await userRepository.update(id, request.body);
 
       response.json({
+        status: "SUCCESS",
         message: "User updated successfully",
+        version: AppConfig.VERSION,
+        timestamp: new Date().toISOString(),
         data: updatedUser,
       });
     } catch (error) {
       console.error("Error in update:", error);
       response.status(500).json({
-        error: "Internal server error",
+        status: "FAILED",
+        message: "Internal server error",
+        version: AppConfig.VERSION,
+        timestamp: new Date().toISOString(),
       });
     }
   }
@@ -170,7 +227,10 @@ export class UserController {
 
       if (isNaN(id)) {
         response.status(400).json({
-          error: "Invalid user ID",
+          status: "FAILED",
+          message: "Invalid user ID",
+          version: AppConfig.VERSION,
+          timestamp: new Date().toISOString(),
         });
         return;
       }
@@ -179,18 +239,27 @@ export class UserController {
 
       if (!deleted) {
         response.status(404).json({
-          error: "User not found",
+          status: "FAILED",
+          message: "User not found",
+          version: AppConfig.VERSION,
+          timestamp: new Date().toISOString(),
         });
         return;
       }
 
       response.json({
+        status: "SUCCESS",
         message: "User deleted successfully",
+        version: AppConfig.VERSION,
+        timestamp: new Date().toISOString(),
       });
     } catch (error) {
       console.error("Error in delete:", error);
       response.status(500).json({
-        error: "Internal server error",
+        status: "FAILED",
+        version: AppConfig.VERSION,
+        timestamp: new Date().toISOString(),
+        message: "Internal server error",
       });
     }
   }

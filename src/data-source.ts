@@ -1,21 +1,18 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { User } from "./entity/User";
-import dotenv from "dotenv";
-
-// Load environment variables
-dotenv.config();
+import { DatabaseConfig } from "./configs/config";
 
 // TypeORM DataSource configuration
 export const AppDataSource = new DataSource({
-  type: (process.env.DB_TYPE as any) || "postgres",
-  host: process.env.DB_HOST || "localhost",
-  port: parseInt(process.env.DB_PORT || "5432"),
-  username: process.env.DB_USERNAME || "postgres",
-  password: process.env.DB_PASSWORD || "password",
-  database: process.env.DB_DATABASE || "express-crud-api",
-  synchronize: process.env.DB_SYNCHRONIZE === "true",
-  logging: process.env.DB_LOGGING === "true",
+  type: DatabaseConfig.TYPE,
+  host: DatabaseConfig.HOST,
+  port: DatabaseConfig.PORT,
+  username: DatabaseConfig.USERNAME,
+  password: DatabaseConfig.PASSWORD,
+  database: DatabaseConfig.DATABASE,
+  synchronize: DatabaseConfig.SYNCHRONIZE,
+  logging: DatabaseConfig.LOGGING,
   entities: [User],
   migrations: [],
   subscribers: [],

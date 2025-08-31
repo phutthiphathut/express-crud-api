@@ -1,10 +1,6 @@
 import { Router } from "express";
-import dotenv from "dotenv";
 import userRoutes from "./userRoutes";
-
-dotenv.config();
-
-const APP_NAME = process.env.APP_NAME || "express-crud-api";
+import { AppConfig } from "../configs/config";
 
 const router = Router();
 
@@ -14,8 +10,9 @@ router.use("/users", userRoutes);
 // Health check endpoint
 router.get("/health", (req, res) => {
   res.json({
-    status: "OK",
-    message: `${APP_NAME} is running`,
+    status: "SUCCESS",
+    message: `${AppConfig.NAME} is running`,
+    version: AppConfig.VERSION,
     timestamp: new Date().toISOString(),
   });
 });

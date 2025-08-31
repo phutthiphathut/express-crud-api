@@ -4,6 +4,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import routes from "./routes";
+import { AppConfig } from "./configs/config";
 
 // Custom error interface
 interface CustomError extends Error {
@@ -65,16 +66,20 @@ class App {
     // Root endpoint
     this.app.get("/", (req: Request, res: Response) => {
       res.json({
-        message: "Welcome to CRUD API with TypeScript and Express",
-        version: "1.0.0",
-        endpoints: {
-          health: "/api/health",
-          users: {
-            getAll: "GET /api/users?page=1&limit=10",
-            getOne: "GET /api/users/:id",
-            create: "POST /api/users",
-            update: "PUT /api/users/:id",
-            delete: "DELETE /api/users/:id",
+        status: "SUCCESS",
+        message: `${AppConfig.NAME} is running`,
+        version: AppConfig.VERSION,
+        timestamp: new Date().toISOString(),
+        data: {
+          endpoints: {
+            health: "/api/health",
+            users: {
+              getAll: "GET /api/users?page=1&limit=10",
+              getOne: "GET /api/users/:id",
+              create: "POST /api/users",
+              update: "PUT /api/users/:id",
+              delete: "DELETE /api/users/:id",
+            },
           },
         },
       });
