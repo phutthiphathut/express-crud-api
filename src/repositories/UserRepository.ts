@@ -1,4 +1,4 @@
-import { Repository, Not } from "typeorm";
+import { Repository } from "typeorm";
 import { User } from "../entities/User";
 import { AppDataSource } from "../data-source";
 
