@@ -88,8 +88,10 @@ class App {
     // 404 handler
     this.app.use("*", (req: Request, res: Response) => {
       res.status(404).json({
-        error: `Route ${req.originalUrl} not found`,
-        message: "The requested resource does not exist",
+        status: "FAILED",
+        message: `Route ${req.originalUrl} not found, the requested resource does not exist`,
+        version: AppConfig.VERSION,
+        timestamp: new Date().toISOString(),
       });
     });
   }
@@ -142,3 +144,4 @@ class App {
 }
 
 export default App;
+
