@@ -6,7 +6,6 @@ export class UserRepository {
   private repository: Repository<User>;
 
   constructor() {
-    1;
     this.repository = AppDataSource.getRepository(User);
   }
 
